@@ -10,7 +10,7 @@ Download -> Import project ->Existing Maven Projects -> Run as Spring Boot proje
 ## APIs Developed for  :
 
 ```
-1.sendEmail                   
+1.sendEmailWithoutAttachment                   
 
 2.sendEmailWithAttachment
 
@@ -21,19 +21,19 @@ Download -> Import project ->Existing Maven Projects -> Run as Spring Boot proje
 spring.mail.username = *********@gmail.com	 
 spring.mail.password = *********
 ```
-## Create a private varible in UserRegisterController and pass the reference and define email address in application.properties
+## Create a private varible in EmailRegisterController and pass the reference and define email address in application.properties
 ```
-user.setEmailAddress("Your_Email_Address");
+emailVo.setEmail("Your_Email_Address");
 ```
 ## APIs are accessible at the link :
 
 * Send Mail without Attachment :
 ```
-http://localhost:8080/send-mail
+http://localhost:8080/send-mail-without-attachment
 ```
 * Send Mail with Attachment :
 ```
-http://localhost:8080/send-mail-attachment
+http://localhost:8080/sendmailwithattachment
 ```
   
 ## License

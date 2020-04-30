@@ -3,6 +3,7 @@ package com.mail.demo.service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import com.mail.demo.model.EmailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
@@ -10,25 +11,28 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.mail.demo.model.User;
+import java.io.*;
 
 /**
  * 
  * @author Milanpreet Kaur
  *
  */
-@Service
+@Service        // It uses to mark the class as a service provider.
+@RequestMapping
 public class EmailService {
 
 	/*
 	 * The Spring Framework provides an easy abstraction for sending email by using
 	 * the JavaMailSender interface, springboot also provide auto-configured functionality.
 	 */
+	@Autowired
 	private JavaMailSender mailSender;
 
 	/**
-	 * 
 	 *  mailSender
 	 */
 	@Autowired
@@ -38,11 +42,11 @@ public class EmailService {
 
 	/**
 	 * 
-	 * @param user
+	 * @param
 	 * @throws MailException
 	 */
 
-	public void sendEmail(User user) throws MailException {
+	public void sendEmail(EmailVo emailVo) throws MailException {
 
 		/*
 		 * This JavaMailSender Interface is used to send simpleMailMessage in Spring Boot. This
@@ -52,34 +56,51 @@ public class EmailService {
 		 */
 
 		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-		
-		simpleMailMessage.setTo(user.getEmailAddress());
-		simpleMailMessage.setSubject("Testing Email sending api application");
-		simpleMailMessage.setText("Congratulations ! You have done it mate..");
+
+		simpleMailMessage.setTo(emailVo.getEmail());
+		simpleMailMessage.setSubject("Testing API");
+		simpleMailMessage.setText("Congratulations! GET request works fine");
 
 		/*
 		 * This send() contains an Object of SimpleMailMessage as an Parameter
 		 */
 		mailSender.send(simpleMailMessage);
+
+	}
+	public void sendEmailWithoutAttachment(EmailVo emailVo) throws MailException {
+
+		SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+		
+		simpleMailMessage.setTo(emailVo.getEmail());
+		simpleMailMessage.setSubject(emailVo.getEmailHeader());
+		simpleMailMessage.setText(emailVo.getEmailBody());
+		mailSender.send(simpleMailMessage);
+
 	}
 
 	/**
-	 * This function is used to send mail that contains a attachment any pdf or image.
+	 * This function is used to send mail that contains a attachment any pdf or image or text.
 	 */
-	public void sendEmailWithAttachment(User user) throws MailException, MessagingException {
+	public void sendEmailWithAttachment(EmailVo emailVo, MultipartFile files) throws MailException, MessagingException, IOException {
 
 		MimeMessage message = mailSender.createMimeMessage();
 
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-		helper.setTo(user.getEmailAddress());
-		helper.setSubject("Testing Email sending api application");
-		helper.setText("Congratulations ! You have done it mate..");
-		helper.setText("Please find the attached document below.");
+		helper.setTo(emailVo.getEmail());
+		helper.setSubject(emailVo.getEmailHeader());
+		helper.setText(emailVo.getEmailBody());
 
-		
-		ClassPathResource classPathResource = new ClassPathResource("image.pdf");
-		helper.addAttachment(classPathResource.getFilename(), classPathResource);
+		MultipartFile a = files;
+	    File convFile = new File(a.getOriginalFilename());
+	    convFile.createNewFile();
+		FileOutputStream fos = new FileOutputStream(convFile);
+		fos.write(a.getBytes());
+		fos.close();
+		String emailContent = convFile.toString();
+
+		ClassPathResource classPathResource = new ClassPathResource(emailContent);
+		helper.addAttachment(classPathResource.getPath().toString(), convFile);
 
 		mailSender.send(message);
 	}
