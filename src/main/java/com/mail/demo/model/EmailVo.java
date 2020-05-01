@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
         "emailBody"
 })
 @Component
+@Getter
+@Setter
 public class EmailVo {
 
     @JsonProperty("name")
@@ -30,46 +34,6 @@ public class EmailVo {
     private String emailBody;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @JsonProperty("email")
-    public String getEmail() {
-        return email;
-    }
-
-    @JsonProperty("email")
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @JsonProperty("emailHeader")
-    public String getEmailHeader() {
-        return emailHeader;
-    }
-
-    @JsonProperty("emailHeader")
-    public void setEmailHeader(String emailHeader) {
-        this.emailHeader = emailHeader;
-    }
-
-    @JsonProperty("emailBody")
-    public String getEmailBody() {
-        return emailBody;
-    }
-
-    @JsonProperty("emailBody")
-    public void setEmailBody(String emailBody) {
-        this.emailBody = emailBody;
-    }
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
