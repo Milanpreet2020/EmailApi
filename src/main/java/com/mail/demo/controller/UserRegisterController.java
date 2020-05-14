@@ -35,17 +35,19 @@ public class UserRegisterController {
 	 */
 
 	@Value("${Name}")
-	private String name;
+	private String fullName;
+
 
 	@Value("${emailAddress}")
-	private String email;
+	private String emailAddress;
 
 
 	/**
 	 * Using @GetMapping annotation to GET request from the postman.
 	 */
 
-	@GetMapping("/send-mail")
+
+	@RequestMapping(value="/send-mail", method=RequestMethod.GET)
 	public String send() {
 
 		/*
@@ -54,8 +56,8 @@ public class UserRegisterController {
 		 * stored in application.properties file.
 		 */
 
-		emailVo.setName(name);
-		emailVo.setEmail(email); //emailVo.setEmail(email); Receiver's email address from application.properties
+		emailVo.setName(fullName);
+		emailVo.setEmail(emailAddress); //emailVo.setEmail(email); Receiver's email address from application.properties
 
 		/*
 		 * Calling sendEmail() for Sending mail to the sender by using GET request.
@@ -73,7 +75,7 @@ public class UserRegisterController {
 	 * Using @RequestMapping annotation to POST value from the postman without attachment.
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/send-mail-without-attachment")
-	public String send(@RequestBody EmailVo emailVo){
+	public String sendWithoutAttachment(@RequestBody EmailVo emailVo){
 
 		/*
 		 * Setting the name,Email,header and emailBody through postman

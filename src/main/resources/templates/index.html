@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="ISO-8859-1"/>
+    <title>Demo Application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>Email Sending API</h1>
+<input type="button" style="margin:5px;" name="send" id="send" value="GET DATA" onclick="m1();"/><br />
+<input type="button" style="margin:5px;" name="sendWithoutAttachment" id="sendWithoutAttachment" value="POST DATA" onclick="m2();"/>
+<input type="text" name="name" placeholder="Enter name" id="name"/>
+<input type="text" name="email" placeholder="Enter email" id="email"/>
+<input type="text" name="emailHeader" placeholder="Enter Header of email" id="emailHeader"/>
+<input type="text" name="emailBody" placeholder="Enter Body of email" id="emailBody"/>
+
+
+
+
+<script>
+	function m1() {
+	  $.ajax({
+	        url: "/send-mail",
+	        type: "GET",
+	        success: function (data) {
+	        alert(data);
+	        	console.log("GET DATA API RESPONSE -::"+data);
+	        }, error: function (jqXHR, textStatus, errorThrown) {
+	        }
+		});
+	
+	}
+	function m2() {
+
+		var modelObj = {
+				name: $("#name").val(),
+				email: $("#email").val(),
+				emailHeader: $("#emailHeader").val(),
+				emailBody: $("#emailBody").val()
+		};
+
+		console.log("post data:"+modelObj);
+
+		 $.ajax({
+	            type: "POST",
+	            url: "/send-mail-without-attachment",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            data: JSON.stringify(modelObj),
+	            success: function (data) {
+	            	console.log("POST API RESPONSE::"+data);
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	            }
+	        });
+	}
+
+
+	</script>
+</body>
+</html>
